@@ -1,56 +1,34 @@
-//functions and arguments
-//user defined functions-DRY
-var car,wall,fixedRect,movingRect;
+//add the matter.js  like these shortnames is called as name spacing 
+const Engine=Matter.Engine;     //world will by the engine
+const World=Matter.World;     //add the bird to world
+const Bodies=Matter.Bodies;   //bird
+
+var object;
+var ground;
 function setup() {
   createCanvas(800,400);
-  fixedRect=createSprite(400, 200,50, 100);   //frw/2=80/2=40
-  fixedRect.shapeColor="red";
-  movingRect=createSprite(600, 200, 100, 50);   //movingrectwidth/2=80/2=40
-  movingRect.shapeColor="red";                 //fixedrectwidth/2+movingrectwidth/2=40+40=80
+  engine=Engine.create()   //creating engine
+  world=engine.world;     //adding world to engine
+  
+  var options={
+    restitution:0.3,
+  }
+  object=Bodies.rectangle(250,250,50,50,options);   //object is the body
+  World.add(world,object);    //adding the object body to the world
 
-  car=createSprite(200,100,100,50)
-  car.shapeColor="pink";
-  car.velocityX=2;
-
-  wall=createSprite(600,100,50,100)
-  wall.shapeColor="pink";
-
+  var options1={
+    isStatic:true,
+  }
+  ground= Bodies.rectangle(200,380,800,30,options1);
+  World.add(world,ground);
+  console.log(object);
 }
 
 function draw() {
-  background("yellow"); 
-  movingRect.x=mouseX;  
-  movingRect.y=mouseY;
-  //calling the function-friend1
-  if(isTouching(movingRect,fixedRect))
-  {
-    fixedRect.shapeColor="green";
-   movingRect.shapeColor="green";
-  }
-  else{
-    fixedRect.shapeColor="red";
-    movingRect.shapeColor="red";
-  }
-bounceoff( car,wall)
- 
-  drawSprites();
-}
-function bounceoff(object1,object2)
-{
-  //statements to be executed
-  if(object1.x-object2.x<object2.width/2+object1.width/2&&
-    object2.x-object1.x<object2.width/2+object1.width/2) 
-   
-    {
-    object1.velocityX=object1.velocityX*(-1);
-    object2.velocityX=object2.velocityX*(-1);
-    }
-    if( object1.y-object2.y<object2.height/2+object1.height/2&&
-      object2.y-object1.y<object2.height/2+object1.height/2 )
-      {
-        object1.velocityY=object1.velocityY*(-1);
-        object2.velocityY=object2.velocityY*(-1);
-      }
- 
- 
+  background(255,255,255);  
+
+  Engine.update(engine);
+  rect(object.position.x,object.position.y,50,50);
+
+  rect(ground.position.x,ground.position.y, 600,20);
 }
